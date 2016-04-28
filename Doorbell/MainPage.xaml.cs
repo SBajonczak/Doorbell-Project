@@ -25,6 +25,9 @@ namespace Doorbell
         public MainPage()
         {
             this.InitializeComponent();
+
+            DoorbellViewModel vm = new DoorbellViewModel();
+            this.DataContext = vm;
         }
     }
 }
