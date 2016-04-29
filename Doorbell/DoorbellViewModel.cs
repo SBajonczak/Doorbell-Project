@@ -20,12 +20,12 @@ namespace Doorbell
         /// <summary>
         /// Doorbell switch
         /// </summary>
-        public static int ButtonPinNumber = 21;
+        public static int ButtonPinNumber = 26;
 
         /// <summary>
         /// The Signall will be redirected to this port.
         /// </summary>
-        public static int OutputPinNumber = 5;
+        public static int OutputPinNumber = 19;
 
         GpioPin buttonPin;
         GpioPin ouputPin;
@@ -34,7 +34,6 @@ namespace Doorbell
         {
             this.InitializeGpio();
             this.InitializeAzureIOTHub();
-            this.TransferRingToAzure();
         }
 
         private void InitializeAzureIOTHub()
@@ -56,26 +55,38 @@ namespace Doorbell
                 buttonPin.SetDriveMode(GpioPinDriveMode.Input);
                 //Set a function callback in the event of a value change
                 buttonPin.ValueChanged += buttonPin_ValueChanged;
-
                 ouputPin = gpioController.OpenPin(OutputPinNumber);
                 ouputPin.SetDriveMode(GpioPinDriveMode.Output);
             }
          }
 
-        //This method will be called everytime there is a change in the GPIO pin value
+        /// <summary>
+        /// The Ring Button was pressed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void buttonPin_ValueChanged(object sender, GpioPinValueChangedEventArgs e)
         {
-            Debug.WriteLine("Klingel");
             //Only read the sensor value when the button is released
-            if (e.Edge == GpioPinEdge.RisingEdge)
+            switch (e.Edge)
             {
+                case GpioPinEdge.FallingEdge:
+                    this.TransferRingToOutput();
+                    this.TransferRingToAzure();
+                    Debug.WriteLine("Button pressed");
+                    break;
+                case GpioPinEdge.RisingEdge:
+                    Debug.WriteLine("Button Released");
+                    break;
 
-                this.TransferRingToBell();
-                this.TransferRingToAzure();    
             }
+            
         }
 
-        private async void TransferRingToBell()
+        /// <summary>
+        /// Transfers the Ring to the output
+        /// </summary>
+        private async void TransferRingToOutput()
         {
             if (ouputPin != null)
             {
@@ -87,6 +98,9 @@ namespace Doorbell
         }
 
 
+        /// <summary>
+        /// Transfer Ring to the Azure IOT Hub
+        /// </summary>
         private async void TransferRingToAzure()
         {
             var data = new DoorbellData("Haustür");
