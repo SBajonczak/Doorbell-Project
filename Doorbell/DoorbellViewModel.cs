@@ -16,7 +16,6 @@ namespace Doorbell
         static string iotHubUri = "DataFleet.azure-devices.net";
         static string deviceKey = "5X4v034PULDbjiFug83oUzm0PlAYq3V0fe5niGBnhq8=";
 
-
         /// <summary>
         /// Doorbell switch
         /// </summary>
@@ -39,7 +38,6 @@ namespace Doorbell
         private void InitializeAzureIOTHub()
         {
             deviceClient = DeviceClient.Create(iotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey("myFirstDevice", deviceKey));
-
         }
 
         private void InitializeGpio()
@@ -65,7 +63,7 @@ namespace Doorbell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void buttonPin_ValueChanged(object sender, GpioPinValueChangedEventArgs e)
+        private void buttonPin_ValueChanged(object sender, GpioPinValueChangedEventArgs e)
         {
             //Only read the sensor value when the button is released
             switch (e.Edge)
@@ -73,10 +71,10 @@ namespace Doorbell
                 case GpioPinEdge.FallingEdge:
                     this.TransferRingToOutput();
                     this.TransferRingToAzure();
-                    Debug.WriteLine("Button pressed");
+                    Debug.WriteLine("Button Released");
                     break;
                 case GpioPinEdge.RisingEdge:
-                    Debug.WriteLine("Button Released");
+                    Debug.WriteLine("Button pressed");
                     break;
 
             }
@@ -103,12 +101,18 @@ namespace Doorbell
         /// </summary>
         private async void TransferRingToAzure()
         {
-            var data = new DoorbellData("Haustür");
+
+            var data = new DoorbellData("Klingel");
             var messageString = JsonConvert.SerializeObject(data);
             var message = new Message(Encoding.ASCII.GetBytes(messageString));
-
-            await deviceClient.SendEventAsync(message);
-            
+            try
+            {
+                await deviceClient.SendEventAsync(message);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
 
