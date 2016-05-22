@@ -7,14 +7,25 @@ using Microsoft.Data.Entity;
 
 namespace Doorbell.Web.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : DbContext
     {
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+
+            base.OnConfiguring(optionsBuilder);
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {           
+            builder.Entity<Rings>(entity =>
+            {
+                entity.HasKey(d => d.timestamp);
+            });
+
+            base.OnModelCreating(builder);
+
+        }
+
+        public virtual DbSet<Rings> RingList { get; set; }
     }
 }

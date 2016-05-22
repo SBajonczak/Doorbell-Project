@@ -1,6 +1,7 @@
-﻿{
+{
   "userSecretsId": "aspnet5-Doorbell.Web-18d660af-6af3-452b-87b2-efb9f84ab822",
   "version": "1.0.0-*",
+
   "compilationOptions": {
     "emitEntryPoint": true
   },
@@ -19,13 +20,7 @@
     "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
     "Microsoft.Extensions.CodeGenerators.Mvc": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.FileProviderExtensions" : "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final"
+    "Microsoft.Extensions.Configuration.FileProviderExtensions": "1.0.0-rc1-final"
   },
 
   "commands": {
@@ -34,7 +29,6 @@
   },
 
   "frameworks": {
-    "dnx451": { },
     "dnxcore50": { }
   },
 

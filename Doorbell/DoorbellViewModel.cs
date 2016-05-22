@@ -26,6 +26,9 @@ namespace Doorbell
         /// </summary>
         public static int OutputPinNumber = 19;
 
+        
+
+
         GpioPin buttonPin;
         GpioPin ouputPin;
 

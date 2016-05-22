@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using System.Data.SqlClient;
+using Doorbell.Web.Models;
 
 namespace Doorbell.Web.Controllers
 {
@@ -10,12 +12,21 @@ namespace Doorbell.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            List<Rings> rings = new List<Rings>();
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+               rings = context.RingList.OrderByDescending(_=>_.timestamp).ToList();
+            }
+
+            return View(rings);
         }
+
+
+        
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "233223Your application description page.";
 
             return View();
         }
